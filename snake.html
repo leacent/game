@@ -313,12 +313,16 @@
         // 添加音效
         const bgm = new Audio('./music/bgm.mp3');
         const failedSound = new Audio('./music/failed.mp3');
-        const eatSound = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU');
+        const eatSound = new Audio('./music/eat.mp3');
 
         // 设置背景音乐循环播放
         bgm.loop = true;
         bgm.volume = 0.5; // 设置背景音乐音量
         bgm.preload = 'auto'; // 预加载音频
+
+        // 设置音效音量
+        eatSound.volume = 0.7;
+        failedSound.volume = 0.7;
 
         // 添加全局点击事件来启动背景音乐
         document.addEventListener('click', () => {
@@ -788,7 +792,9 @@
                 if (newX === food.x && newY === food.y) {
                     // 播放吃到食物的音效
                     eatSound.currentTime = 0;
-                    eatSound.play();
+                    eatSound.play().catch(error => {
+                        console.log("播放音效失败:", error);
+                    });
                     // 增加蛇的长度
                     snake.push({...snake[snake.length - 1]});
                     score += 10;
