@@ -232,6 +232,10 @@
     </div>
 
     <script>
+        // 添加音效
+        const mergeSound = new Audio('./music/merge.mp3');
+        mergeSound.volume = 0.5;
+
         class Game2048 {
             constructor(size = 4) {
                 this.size = size;
@@ -361,6 +365,11 @@
                             this.score += row[j];
                             row.splice(j + 1, 1);
                             moved = true;
+                            // 播放合并音效
+                            mergeSound.currentTime = 0;
+                            mergeSound.play().catch(error => {
+                                console.log("播放音效失败:", error);
+                            });
                         }
                     }
                     const newRow = row.concat(Array(this.size - row.length).fill(0));
@@ -382,6 +391,11 @@
                             this.score += row[j];
                             row.splice(j - 1, 1);
                             moved = true;
+                            // 播放合并音效
+                            mergeSound.currentTime = 0;
+                            mergeSound.play().catch(error => {
+                                console.log("播放音效失败:", error);
+                            });
                         }
                     }
                     const newRow = Array(this.size - row.length).fill(0).concat(row);
@@ -407,6 +421,11 @@
                             this.score += column[i];
                             column.splice(i + 1, 1);
                             moved = true;
+                            // 播放合并音效
+                            mergeSound.currentTime = 0;
+                            mergeSound.play().catch(error => {
+                                console.log("播放音效失败:", error);
+                            });
                         }
                     }
                     column = column.concat(Array(this.size - column.length).fill(0));
@@ -434,6 +453,11 @@
                             this.score += column[i];
                             column.splice(i - 1, 1);
                             moved = true;
+                            // 播放合并音效
+                            mergeSound.currentTime = 0;
+                            mergeSound.play().catch(error => {
+                                console.log("播放音效失败:", error);
+                            });
                         }
                     }
                     column = Array(this.size - column.length).fill(0).concat(column);
