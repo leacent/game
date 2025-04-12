@@ -511,10 +511,52 @@
                 const y = obs.y * gridSize;
                 const size = gridSize - 2;
                 
-                ctx.fillStyle = 'rgba(255, 87, 34, 0.8)';
+                // 创建渐变效果
+                const gradient = ctx.createRadialGradient(
+                    x + size/2, y + size/2, 0,
+                    x + size/2, y + size/2, size/2
+                );
+                gradient.addColorStop(0, '#FF7043');
+                gradient.addColorStop(1, '#E64A19');
+                
+                // 绘制阴影
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+                ctx.shadowBlur = 5;
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
+                
+                // 绘制三角形
+                ctx.fillStyle = gradient;
                 ctx.beginPath();
-                ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2);
+                const centerX = x + size/2;
+                const centerY = y + size/2;
+                const radius = size/2;
+                
+                // 计算三角形的三个顶点
+                for (let i = 0; i < 3; i++) {
+                    const angle = (i * 2 * Math.PI / 3) - Math.PI / 2; // 旋转使三角形朝上
+                    const px = centerX + radius * Math.cos(angle);
+                    const py = centerY + radius * Math.sin(angle);
+                    if (i === 0) {
+                        ctx.moveTo(px, py);
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                }
+                ctx.closePath();
                 ctx.fill();
+                
+                // 添加高光
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY - radius/2);
+                ctx.lineTo(centerX - radius/3, centerY + radius/4);
+                ctx.lineTo(centerX + radius/3, centerY + radius/4);
+                ctx.closePath();
+                ctx.fill();
+                
+                // 重置阴影
+                ctx.shadowColor = 'transparent';
             });
         }
 
@@ -578,18 +620,28 @@
                 const size = Math.max(gridSize - 2, 8);
                 
                 // 创建渐变
-                const gradient = ctx.createLinearGradient(x, y, x + size, y + size);
+                const gradient = ctx.createRadialGradient(
+                    x + size/2, y + size/2, 0,
+                    x + size/2, y + size/2, size/2
+                );
+                
                 if (index === 0) { // 蛇头
-                    gradient.addColorStop(0, '#4CAF50');
-                    gradient.addColorStop(1, '#45a049');
+                    gradient.addColorStop(0, '#66BB6A');
+                    gradient.addColorStop(1, '#43A047');
                 } else { // 蛇身
-                    gradient.addColorStop(0, '#8BC34A');
-                    gradient.addColorStop(1, '#7CB342');
+                    gradient.addColorStop(0, '#81C784');
+                    gradient.addColorStop(1, '#66BB6A');
                 }
+                
+                // 添加阴影效果
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+                ctx.shadowBlur = 3;
+                ctx.shadowOffsetX = 1;
+                ctx.shadowOffsetY = 1;
                 
                 ctx.fillStyle = gradient;
                 ctx.beginPath();
-                ctx.roundRect(x, y, size, size, 5);
+                ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2);
                 ctx.fill();
                 
                 // 绘制蛇头眼睛
@@ -597,6 +649,7 @@
                     const eyeSize = Math.max(size / 6, 2);
                     const eyeOffset = size / 3;
                     
+                    // 绘制眼睛轮廓
                     ctx.fillStyle = 'white';
                     ctx.beginPath();
                     ctx.arc(
@@ -607,7 +660,22 @@
                         Math.PI * 2
                     );
                     ctx.fill();
+                    
+                    // 绘制瞳孔
+                    ctx.fillStyle = '#333';
+                    ctx.beginPath();
+                    ctx.arc(
+                        x + (dx === 1 ? size - eyeOffset : dx === -1 ? eyeOffset : size/2),
+                        y + (dy === 1 ? size - eyeOffset : dy === -1 ? eyeOffset : size/2),
+                        eyeSize/2,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
                 }
+                
+                // 重置阴影
+                ctx.shadowColor = 'transparent';
             });
         }
 
